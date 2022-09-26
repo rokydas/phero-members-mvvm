@@ -1,4 +1,4 @@
-package com.example.pherofamily.data.remote.responses
+package com.example.pherofamily.model
 
 data class TeamMembers(
     val `data`: List<Member>,

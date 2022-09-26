@@ -1,4 +1,4 @@
-package com.example.pherofamily.data.remote.responses
+package com.example.pherofamily.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

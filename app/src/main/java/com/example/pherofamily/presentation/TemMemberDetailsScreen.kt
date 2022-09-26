@@ -16,11 +16,10 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.example.pherofamily.model.Member
 
 @Composable
-fun TeamMemberDetailsScreen(
-    sharedViewModel: SharedViewModel
-) {
+fun TeamMemberDetailsScreen(member: Member) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -30,7 +29,7 @@ fun TeamMemberDetailsScreen(
     ) {
         SubcomposeAsyncImage(
             modifier = Modifier.height(200.dp),
-            model = sharedViewModel.memberDetails?.profileImage,
+            model = member.profileImage,
             contentDescription = "course thumbnail",
             contentScale = ContentScale.FillHeight
         ) {
@@ -45,21 +44,21 @@ fun TeamMemberDetailsScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = sharedViewModel.memberDetails!!.fullName,
+            text = member.fullName,
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             color = Color.White
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = sharedViewModel.memberDetails!!.designation,
+            text = member.designation,
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
             color = Color.White
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "Team: " + sharedViewModel.memberDetails!!.team,
+            text = "Team: " + member.team,
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
             color = Color.White

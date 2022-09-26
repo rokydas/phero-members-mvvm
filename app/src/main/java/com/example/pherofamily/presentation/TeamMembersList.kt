@@ -22,21 +22,21 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import com.example.pherofamily.data.remote.responses.Member
+import com.example.pherofamily.controller.TeamMembersController
+import com.example.pherofamily.model.Member
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TeamMembersList(
-    viewModel: TeamMembersViewModel,
+    controller: TeamMembersController,
     navController: NavHostController,
-    sharedViewModel: SharedViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
             .background(Color(0xFF1b113d))
     ) {
-        if (viewModel.teamMemberState.isLoading) {
+        if (controller.teamMemberState.isLoading) {
             CircularProgressIndicator(color = Color.White)
         } else {
             Spacer(Modifier.height(20.dp))
@@ -51,12 +51,13 @@ fun TeamMembersList(
                 cells = GridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp)
             ) {
-                items(viewModel.teamMemberState.members!!) { member ->
-                    MemberCard(
-                        member = member,
-                        navController = navController,
-                        sharedViewModel = sharedViewModel
-                    )
+                if (controller.teamMemberState.members != null) {
+                    items(controller.teamMemberState.members!!) { member ->
+                        MemberCard(
+                            member = member,
+                            navController = navController,
+                        )
+                    }
                 }
             }
         }
@@ -67,12 +68,13 @@ fun TeamMembersList(
 fun MemberCard(
     member: Member,
     navController: NavHostController,
-    sharedViewModel: SharedViewModel
 ) {
     Card(
         modifier = Modifier.padding(5.dp)
             .clickable {
-                sharedViewModel.addMemberDetails(member)
+                navController.currentBackStackEntry?.savedStateHandle?.apply {
+                    set("member", member)
+                }
                 navController.navigate(ScreenItem.MemberDetailsScreenItem.route)
             },
         backgroundColor = Color(0xFF0f0826)

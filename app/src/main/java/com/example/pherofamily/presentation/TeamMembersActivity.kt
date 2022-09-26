@@ -3,12 +3,13 @@ package com.example.pherofamily.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.material.Surface
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.pherofamily.controller.TeamMembersController
+import com.example.pherofamily.model.Member
 import com.example.pherofamily.ui.theme.PheroFamilyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -19,11 +20,10 @@ class TeamMembersActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel: TeamMembersViewModel by viewModels()
-        val sharedViewModel: SharedViewModel by viewModels()
+        val controller = TeamMembersController()
 
         lifecycleScope.launch {
-            viewModel.getMembersList()
+            controller.getMembersList()
         }
 
         setContent {
@@ -36,15 +36,15 @@ class TeamMembersActivity : ComponentActivity() {
                     ) {
                         composable(route = ScreenItem.MemberListScreen.route) {
                             TeamMembersList(
-                                viewModel = viewModel,
-                                sharedViewModel = sharedViewModel,
-                                navController = navController
+                                controller = controller,
+                                navController = navController,
                             )
                         }
                         composable(route = ScreenItem.MemberDetailsScreenItem.route) {
-                            TeamMemberDetailsScreen(
-                                sharedViewModel = sharedViewModel
-                            )
+                            val member = navController.previousBackStackEntry?.savedStateHandle?.get<Member>("member")
+                            if (member != null) {
+                                TeamMemberDetailsScreen(member = member)
+                            }
                         }
                     }
                 }
